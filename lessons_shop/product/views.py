@@ -60,5 +60,4 @@ class ProductStatViewSet(generics.ListAPIView):
             total_students=Count('access_users', distinct=True),
             buyer_percent=F('total_students') / User.objects.all().count()
         ).all()
-        print()
         return products
