@@ -39,22 +39,9 @@ class LessonsByProductsViewSet(viewsets.ReadOnlyModelViewSet):
             return Response()
 
 
-'''
-
-Количество просмотренных уроков от всех учеников.
-Сколько в сумме все ученики потратили времени на просмотр роликов.
-
-Количество учеников занимающихся на продукте.
-Процент приобретения продукта 
-(рассчитывается исходя из количества полученных доступов к продукту деленное на общее количество пользователей на платформе).
-
-'''
-
 class ProductStatViewSet(generics.ListAPIView):
     serializer_class = ProductsStatsSerializer
     permission_classes = [IsAuthenticated]
-
-
 
     def get_queryset(self):
 
