@@ -56,7 +56,7 @@ class ProductStatViewSet(generics.ListAPIView):
     def get_queryset(self):
         products = Product.objects.prefetch_related('lesson_set__lesson_views').annotate(
             total_viewed=Count('lesson_set__lesson_views', filter=Q(lesson_set__lesson_views__is_viewed=True), distinct=True),
-            total_time=Sum('lesson_set__lesson_views__viewed_time'),
+            total_time=Sum('lesson_set__lesson_views__viewed_time', filter=Q(lesson_set__lesson_views__user__in=F('access_users'))),
             total_students=Count('access_users', distinct=True),
         ).all()
         print()
