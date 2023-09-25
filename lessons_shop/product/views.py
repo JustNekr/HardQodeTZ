@@ -53,11 +53,14 @@ class ProductStatViewSet(generics.ListAPIView):
     serializer_class = ProductsStatsSerializer
     permission_classes = [IsAuthenticated]
 
+
+
     def get_queryset(self):
-        products = Product.objects.prefetch_related('lesson_set__lesson_views').annotate(
+
+        products = Product.objects.prefetch_related('lesson_set__lesson_views', 'access_users').annotate(
             total_viewed=Count('lesson_set__lesson_views', filter=Q(lesson_set__lesson_views__is_viewed=True), distinct=True),
             total_time=Sum('lesson_set__lesson_views__viewed_time', filter=Q(lesson_set__lesson_views__user__in=F('access_users'))),
             total_students=Count('access_users', distinct=True),
-            buyer_percent=F('total_students') / User.objects.all().count()
+            buyer_percent=(F('total_students') / User.objects.all().count())
         ).all()
         return products
