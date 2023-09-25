@@ -1,9 +1,10 @@
 from django.contrib.auth.models import User
+from django.db.models.functions import Cast
 from rest_framework import generics, mixins, viewsets, status
 from django.db import models
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.db.models import Sum, Count, Subquery, Prefetch, FilteredRelation, Q, F, OuterRef
+from django.db.models import Sum, Count, Subquery, Prefetch, FilteredRelation, Q, F, OuterRef, FloatField
 from .models import Lesson, Product, LessonView
 from .serializers import AllProductsLessonStatsSerializer, ProductLessonStatsSerializer, ProductsStatsSerializer
 
@@ -61,6 +62,6 @@ class ProductStatViewSet(generics.ListAPIView):
             total_viewed=Count('lesson_set__lesson_views', filter=Q(lesson_set__lesson_views__is_viewed=True), distinct=True),
             total_time=Sum('lesson_set__lesson_views__viewed_time', filter=Q(lesson_set__lesson_views__user__in=F('access_users'))),
             total_students=Count('access_users', distinct=True),
-            buyer_percent=(F('total_students') / User.objects.all().count())
+            buyer_percent=F('total_students') / Cast(User.objects.all().count(), output_field=FloatField())
         ).all()
         return products
