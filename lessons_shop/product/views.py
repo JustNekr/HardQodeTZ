@@ -5,8 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.db.models import Sum, Count, Subquery, Prefetch, FilteredRelation, Q, F, OuterRef
 from .models import Lesson, Product, LessonView
-from .serializers import AllProductsLessonStatsSerializer, ProductLessonStatsSerializer
-
+from .serializers import AllProductsLessonStatsSerializer, ProductLessonStatsSerializer, ProductsStatsSerializer
 
 
 class LessonsByProductsViewSet(viewsets.ReadOnlyModelViewSet):
@@ -53,12 +52,10 @@ class LessonsByProductsViewSet(viewsets.ReadOnlyModelViewSet):
 '''
 
 class ProductStatViewSet(generics.ListAPIView):
-    serializer_class = AllProductsLessonStatsSerializer
+    serializer_class = ProductsStatsSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-
-        total_time = LessonView.objects.filter(lesson__in=OuterRef('lesson_set')).values('viewed_time')
         products = Product.objects.prefetch_related('lesson_set__lesson_views').annotate(
             total_viewed=Count('lesson_set__lesson_views', filter=Q(lesson_set__lesson_views__is_viewed=True)),
             total_time=Sum('lesson_set__lesson_views__viewed_time')).all()
