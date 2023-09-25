@@ -26,7 +26,8 @@ class ProductsStatsSerializer(serializers.ModelSerializer):
     total_viewed = serializers.IntegerField()
     total_time = serializers.IntegerField()
     total_students = serializers.IntegerField()
+    buyer_percent = serializers.FloatField()
 
     class Meta:
         model = Product
-        fields = ['owner', 'name', 'access_users', 'total_viewed', 'total_time', 'total_students']
+        fields = ['owner', 'name', 'access_users', 'total_viewed', 'total_time', 'total_students', 'buyer_percent']

@@ -58,6 +58,7 @@ class ProductStatViewSet(generics.ListAPIView):
             total_viewed=Count('lesson_set__lesson_views', filter=Q(lesson_set__lesson_views__is_viewed=True), distinct=True),
             total_time=Sum('lesson_set__lesson_views__viewed_time', filter=Q(lesson_set__lesson_views__user__in=F('access_users'))),
             total_students=Count('access_users', distinct=True),
+            buyer_percent=F('total_students') / User.objects.all().count()
         ).all()
         print()
         return products
