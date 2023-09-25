@@ -40,11 +40,9 @@ class LessonsByProductsViewSet(viewsets.ReadOnlyModelViewSet):
 
 '''
 
-Реализовать API для отображения статистики по продуктам. 
-Необходимо отобразить список всех продуктов на платформе, 
-к каждому продукту приложить информацию:
 Количество просмотренных уроков от всех учеников.
 Сколько в сумме все ученики потратили времени на просмотр роликов.
+
 Количество учеников занимающихся на продукте.
 Процент приобретения продукта 
 (рассчитывается исходя из количества полученных доступов к продукту деленное на общее количество пользователей на платформе).
@@ -58,5 +56,7 @@ class ProductStatViewSet(generics.ListAPIView):
     def get_queryset(self):
         products = Product.objects.prefetch_related('lesson_set__lesson_views').annotate(
             total_viewed=Count('lesson_set__lesson_views', filter=Q(lesson_set__lesson_views__is_viewed=True)),
-            total_time=Sum('lesson_set__lesson_views__viewed_time')).all()
+            total_time=Sum('lesson_set__lesson_views__viewed_time'),
+            total_students=Count('access_users')).all()
+        print()
         return products

@@ -25,7 +25,8 @@ class ProductLessonStatsSerializer(serializers.ModelSerializer):
 class ProductsStatsSerializer(serializers.ModelSerializer):
     total_viewed = serializers.IntegerField()
     total_time = serializers.IntegerField()
+    total_students = serializers.IntegerField()
 
     class Meta:
         model = Product
-        fields = ['owner', 'name', 'access_users', 'total_viewed', 'total_time']
+        fields = ['owner', 'name', 'access_users', 'total_viewed', 'total_time', 'total_students']
